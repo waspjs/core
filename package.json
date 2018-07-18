@@ -1,0 +1,19 @@
+{
+  "name": "@wasp/core",
+  "version": "0.0.1",
+  "description": "Flexible API server framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waspjs/core.git"
+  },
+  "author": "Alex Hicks <alex@alexhicks.net> (https://alexhicks.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/waspjs/core/issues"
+  },
+  "homepage": "https://github.com/waspjs/core#readme"
+}

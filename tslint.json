@@ -1,0 +1,101 @@
+{
+  "rules": {
+    "array-type": [true,
+      "array"
+    ],
+    "arrow-return-shorthand": [true,
+      "multiline"
+    ],
+    "await-promise": true,
+    "ban-comma-operator": true,
+    "callable-types": true,
+    "class-name": true,
+    "comment-format": [true,
+      "check-space"
+    ],
+    "curly": [true,
+      "ignore-same-line"
+    ],
+    "deprecation": true,
+    "eofline": true,
+    "indent": [true,
+      "spaces"
+    ],
+    "jsdoc-format": true,
+    "linebreak-style": [true,
+      "LF"
+    ],
+    "number-literal-format": true,
+    "no-construct": true,
+    "no-duplicate-super": true,
+    "no-duplicate-variable": [true,
+      "check-parameters"
+    ],
+    "no-empty-interface": true,
+    "no-floating-promises": true,
+    "no-for-in-array": true,
+    "no-inferrable-types": true,
+    "no-internal-module": true,
+    "no-null-keyword": true,
+    "no-return-await": true,
+    "no-string-literal": true,
+    "no-string-throw": true,
+    "no-switch-case-fall-through": true,
+    "no-trailing-whitespace": [true,
+      "ignore-template-strings"
+    ],
+    "no-unnecessary-callback-wrapper": true,
+    "no-var-keyword": true,
+    "object-literal-shorthand": true,
+    "one-line": [true,
+      "check-open-brace",
+      "check-whitespace"
+    ],
+    "only-arrow-functions": [true,
+      "allow-declarations"
+    ],
+    "prefer-const": true,
+    "prefer-for-of": true,
+    "prefer-method-signature": true,
+    "quotemark": [true,
+      "double",
+      "avoid-escape"
+    ],
+    "semicolon": [true,
+      "always",
+      "ignore-bound-class-methods"
+    ],
+    "triple-equals": true,
+    "typedef-whitespace": [true,
+      {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      },
+      {
+        "call-signature": "onespace",
+        "index-signature": "onespace",
+        "parameter": "onespace",
+        "property-declaration": "onespace",
+        "variable-declaration": "onespace"
+      }
+    ],
+    "use-default-type-parameter": true,
+    "use-isnan": true,
+    "variable-name": [true,
+      "check-format",
+      "ban-keywords",
+      "allow-pascal-case"
+    ],
+    "whitespace": [true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-module",
+      "check-separator",
+      "check-type"
+    ]
+	}
+}
