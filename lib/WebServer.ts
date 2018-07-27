@@ -1,6 +1,6 @@
 import * as express from "express";
 import * as http from "http";
-import { requireAll } from "../helpers/require";
+import * as helpers from "../helpers";
 import Application from "./Application";
 
 export default class WebServer {
@@ -21,7 +21,8 @@ export default class WebServer {
     }
 
     private async setupMiddleware() {
-        const handlers = await requireAll<{ default(app: Application): void }>(__dirname + "/middleware");
+        type MiddlewareExports = { default(app: Application): void };
+        const handlers = await helpers.require.fromDir<MiddlewareExports>(__dirname + "/middleware");
         handlers.forEach(h => h.default(this.app));
     }
 }
