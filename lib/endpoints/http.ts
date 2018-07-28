@@ -1,18 +1,20 @@
 import * as express from "express";
 import * as helpers from "../../helpers";
 import { EndpointRegistry } from "..";
-
 export type HttpMethod = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
-export type EndpointParams = {
+
+export abstract class EndpointContext {
     req: express.Request;
     res: express.Response;
-};
-export type Callback = <Result>(this: EndpointParams, ...params: any[]) => Promise<Result>;
+}
+
+export type Callback = <Result>(this: EndpointContext, ...params: any[]) => Promise<Result>;
 
 export const Decorator = (params: DecoratorParams): MethodDecorator =>
     (target: any, methodName) => {
         EndpointRegistry.register(new HttpEndpoint(target[methodName], params));
     };
+export default Decorator;
 
 export type DecoratorParams = {
     name: string;
@@ -20,7 +22,7 @@ export type DecoratorParams = {
     url?: string;
 };
 
-export default class HttpEndpoint {
+export class HttpEndpoint {
     method: HttpMethod;
     params: string[];
     url: string;
@@ -35,7 +37,7 @@ export default class HttpEndpoint {
         return this.url === req.url && this.method === req.method;
     }
 
-    async call(transaction: EndpointParams): Promise<void> {
+    async call(transaction: EndpointContext): Promise<void> {
         const rawParams: {[key: string]: any} = transaction.req[transaction.req.method === "GET" ? "query" : "body"] || {};
         const params: any[] = this.params.map(p => rawParams[p]);
         let result: any;
