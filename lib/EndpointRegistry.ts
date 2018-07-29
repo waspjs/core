@@ -1,4 +1,4 @@
-import { HttpEndpoint } from "./endpoints/http";
+import { Endpoint as HttpEndpoint } from "./http";
 
 export class EndpointRegistry {
     httpEndpoints: HttpEndpoint[] = [];

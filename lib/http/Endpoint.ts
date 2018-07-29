@@ -4,11 +4,9 @@ import { DecoratorParams, HttpMethod } from "./DecoratorParams";
 import * as helpers from "../../helpers";
 
 type ControllerInstance = Context & {
+    constructor: new (context: Context) => ControllerInstance
+} & {
     [methodName: string]: <Return>(...params: any[]) => Promise<Return>;
-};
-
-type Controller = typeof Context & {
-    prototype: ControllerInstance;
 };
 
 export class Endpoint {
@@ -16,13 +14,13 @@ export class Endpoint {
     params: string[];
     url: string;
     constructor(
-        public target: Controller,
+        public target: ControllerInstance,
         public methodName: string,
         params: DecoratorParams
     ) {
         this.method = params.method || "GET";
-        this.params = helpers.function.getParameterNames(target.prototype[methodName]);
-        this.url = params.url || target.prototype[methodName].name;
+        this.params = helpers.function.getParameterNames(target[methodName]);
+        this.url = params.url || target[methodName].name;
     }
 
     isValidFor(req: express.Request): boolean {
@@ -33,13 +31,13 @@ export class Endpoint {
         const rawParams: {[key: string]: any} = context.req[context.req.method === "GET" ? "query" : "body"] || {};
         const params: any[] = this.params.map(p => rawParams[p]);
         let result: any;
-        const controller: ControllerInstance = new this.target(context) as any;
+        const controller: ControllerInstance = new this.target.constructor(context);
         try {
             result = await controller[this.methodName].apply(controller, params);
         } catch (err) {
             console.error(err);
         }
-        if (result === undefined) return;
+        if (result === undefined) result = "";
         if (typeof(result) !== "string" && !(result instanceof Buffer)) {
             result = JSON.stringify(result);
             context.res.setHeader("Content-Type", "application/json");
