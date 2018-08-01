@@ -19,6 +19,7 @@ export default class WebServer {
         await this.setupMiddleware();
         this.express.all("/*", this.onRequest);
         await new Promise(resolve => this.httpServer.listen(3000, resolve));
+        this.app.firePluginEvent("onStart");
         console.log("Started HTTP server, listening on port 3000.");
     }
 
@@ -34,6 +35,6 @@ export default class WebServer {
             res.status(404);
             return;
         }
-        endpoint.call({ req, res }).catch(console.error);
+        endpoint.call(this.app, { req, res }).catch(console.error);
     };
 }

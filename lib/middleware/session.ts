@@ -11,6 +11,6 @@ export default (app: Application) => {
         store,
         resave: true,
         saveUninitialized: false,
-        secret: app.configs.global.session.secret
+        secret: app.config.session.secret
     }));
 };

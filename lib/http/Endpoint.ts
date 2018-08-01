@@ -1,10 +1,11 @@
 import * as express from "express";
-import Context from "./Context";
+import Application from "../Application";
+import Context, { Controller } from "./Context";
 import { DecoratorParams, HttpMethod } from "./DecoratorParams";
 import * as helpers from "../../helpers";
 
-type ControllerInstance = Context & {
-    constructor: new (context: Context) => ControllerInstance
+type ControllerInstance = Controller & {
+    constructor: new (context: Context, app: Application) => ControllerInstance
 } & {
     [methodName: string]: <Return>(...params: any[]) => Promise<Return>;
 };
@@ -27,15 +28,17 @@ export class Endpoint {
         return this.url === req.url && this.method === req.method;
     }
 
-    async call(context: Context): Promise<void> {
+    async call(app: Application, context: Context): Promise<void> {
         const rawParams: {[key: string]: any} = context.req[context.req.method === "GET" ? "query" : "body"] || {};
         const params: any[] = this.params.map(p => rawParams[p]);
         let result: any;
-        const controller: ControllerInstance = new this.target.constructor(context);
+        const controller: ControllerInstance = new this.target.constructor(context, app);
         try {
             result = await controller[this.methodName].apply(controller, params);
         } catch (err) {
-            console.error(err);
+            console.error("error occurred", err);
+            context.res.sendStatus(500);
+            return;
         }
         if (result === undefined) result = "";
         if (typeof(result) !== "string" && !(result instanceof Buffer)) {
