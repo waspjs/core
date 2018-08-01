@@ -16,9 +16,9 @@ export default class WebServer {
     }
 
     async start() {
-        await new Promise(resolve => this.httpServer.listen(3000, resolve));
+        await new Promise(resolve => this.httpServer.listen(this.app.config.http.port, resolve));
         await this.app.firePluginEvent("onStart");
-        console.log("Started HTTP server, listening on port 3000.");
+        console.log(`Started HTTP server, listening on port ${this.app.config.http.port}.`);
     }
 
     async setupMiddleware() {
