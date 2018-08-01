@@ -16,23 +16,22 @@ export default class WebServer {
     }
 
     async start() {
-        await this.setupMiddleware();
-        this.express.all("/*", this.onRequest);
         await new Promise(resolve => this.httpServer.listen(3000, resolve));
-        this.app.firePluginEvent("onStart");
+        await this.app.firePluginEvent("onStart");
         console.log("Started HTTP server, listening on port 3000.");
     }
 
-    private async setupMiddleware() {
+    async setupMiddleware() {
         type MiddlewareExports = { default(app: Application): void };
-        const handlers = await helpers.require.fromDir<MiddlewareExports>(__dirname + "/middleware");
-        handlers.forEach(h => h.default(this.app));
+        const middlewares = await helpers.require.fromDir<MiddlewareExports>(__dirname + "/middleware");
+        middlewares.forEach(m => m.default(this.app));
+        this.express.all("/*", this.onRequest);
     }
 
     private onRequest: express.RequestHandler = (req, res) => {
         const endpoint = EndpointRegistry.httpEndpoints.find(e => e.isValidFor(req));
         if (endpoint === undefined) {
-            res.status(404);
+            res.sendStatus(404);
             return;
         }
         endpoint.call(this.app, { req, res }).catch(console.error);

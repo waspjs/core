@@ -21,4 +21,17 @@ export default class Application {
             (plugin[eventName] as Function)(...params)
         ));
     }
+
+    async start() {
+        try {
+            this.redisClient = await redis.createClient(
+                this.config.redis.port,
+                this.config.redis.host
+            );
+        } catch (err) {
+            console.error("Couldn't connect to Redis server:", err.message);
+        }
+        await this.server.setupMiddleware();
+        await this.server.start();
+    }
 }
