@@ -7,7 +7,7 @@
   "rules": {
     "array-type": false,
     "arrow-parens": [true, "ban-single-arg-parens"],
-    "await-promise": [true, "Query" ],
+    "await-promise": [true, "Query"],
     "cognitive-complexity": false,
     "interface-name": false,
     "max-union-size": false,

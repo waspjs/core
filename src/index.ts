@@ -4,9 +4,14 @@ import "source-map-support/register";
 export { gql } from "apollo-server-core";
 export { default as Container, Service } from "typedi";
 
+export * from "./model/User";
+
 export * from "./lib";
 export * from "./service";
+export * from "./util";
 
 export * from "./Application";
 export * from "./Resolver";
 export * from "./WebServer";
+
+import "./resolver/index";

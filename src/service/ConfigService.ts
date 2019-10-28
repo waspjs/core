@@ -6,7 +6,11 @@ dotenv.config();
 
 @Service()
 export class ConfigService {
-  @ConfigService.required("HTTP_PORT", Number) public httpPort!: number;
+  @ConfigService.required("HTTP_PORT", Number)
+  public httpPort!: number;
+
+  @ConfigService.required("MONGO_URL")
+  public mongoUrl!: string;
 
   protected static setValue<T>(key: string, transformer?: (value: string) => T) {
     return (target: ConfigService, fieldName: keyof ConfigService) => {
@@ -18,11 +22,13 @@ export class ConfigService {
       return true;
     };
   }
+
   protected static optional<T = string>(key: string, transformer?: (value: string) => T) {
     return (target: ConfigService, fieldName: keyof ConfigService) => {
       this.setValue(key, transformer)(target, fieldName);
     };
   }
+
   protected static required<T = string>(key: string, transformer?: (value: string) => T) {
     return (target: ConfigService, fieldName: keyof ConfigService) => {
       const isFound = this.setValue(key, transformer)(target, fieldName);
