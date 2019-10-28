@@ -1,0 +1,45 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended",
+    "tslint-sonarts"
+  ],
+  "rules": {
+    "array-type": false,
+    "arrow-parens": [true, "ban-single-arg-parens"],
+    "await-promise": [true, "Query" ],
+    "cognitive-complexity": false,
+    "interface-name": false,
+    "max-union-size": false,
+    "max-line-length": false,
+    "member-ordering": false,
+    "no-console": false,
+    "no-duplicate-string": [false, 5 ],
+    "no-duplicate-variable": [true, "check-parameters" ],
+    "no-floating-promises": [true, "Query" ],
+    "no-for-in-array": true,
+    "no-identical-functions": false,
+    "no-nested-template-literals": false,
+    "no-return-await": true,
+    "no-unnecessary-callback-wrapper": true,
+    "object-literal-sort-keys": false,
+    "trailing-comma": false,
+    "semicolon": [true, "always"],
+    "quotemark": true,
+    "variable-name": false,
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-module",
+      "check-separator",
+      "check-rest-spread",
+      "check-type",
+      "check-typecast",
+      "check-type-operator",
+      "check-preblock",
+      "check-postbrace"
+    ]
+  }
+}
