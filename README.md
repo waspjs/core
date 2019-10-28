@@ -8,5 +8,5 @@ Opinionated GraphQL/React framework written in Typescript, using Express and Typ
 - [x] Express
 - [x] Apollo
 - [x] Typegoose
-- [ ] Auth
+- [x] Auth
 - [ ] React(?)
