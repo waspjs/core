@@ -1,11 +1,11 @@
 import * as express from "express";
 import * as http from "http";
 import Container, { Service } from "typedi";
-import { ConfigService } from "./service/ConfigService";
-import { LoggingService } from "./service/LoggingService";
+import { ApolloService, ConfigService, LoggingService } from "./service";
 
 @Service()
 export class WebServer {
+  private apolloService = Container.get(ApolloService);
   private config = Container.get(ConfigService);
   private logger = Container.get(LoggingService);
 
@@ -14,6 +14,7 @@ export class WebServer {
 
   public init() {
     this.express = express();
+    this.apolloService.init(this.express);
     this.httpServer = http.createServer(this.express);
   }
 
