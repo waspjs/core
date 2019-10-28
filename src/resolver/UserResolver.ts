@@ -1,25 +1,100 @@
-import { gql } from "apollo-server-express";
-import Container from "typedi";
-import { query, Resolver } from "../Resolver";
-import { MongoService } from "../service";
+import { gql } from "apollo-server-core";
+import { GraphQLError } from "graphql";
+import { Service } from "typedi";
+import { WaspContext } from "../lib";
+import { UserManager } from "../manager/UserManager";
+import { Role } from "../model/Role";
+import { CorePermission } from "../model/shared/CorePermission";
+import { User } from "../model/User";
+import { mutation, query, Resolver, resolver } from "../Resolver";
+import { MongoService } from "../service/MongoService";
 
-@Resolver.Service()
+@Service({ id: Resolver.token, multiple: true })
 export class UserResolver extends Resolver {
-  public types = gql`
-    type User {
-      _id: String!
+  public mutations = gql`
+    type Mutation {
+      addRoleToUser(userId: String, roleId: String!): Boolean!
+      createUser(email: String!, password: String!): User!
     }
   `;
   public queries = gql`
     type Query {
-      users: [User!]!
+      user(id: String): User
+      users(limit: Int!, offset: Int!): [User!]!
+    }
+  `;
+  public types = gql`
+    type User {
+      _id: String!
+      createdAt: Date!
+      email: String!
+      permissions: [String!]!
+      roles: [Role!]!
     }
   `;
 
-  private db = Container.get(MongoService);
+  constructor(
+    private db: MongoService,
+    private userManager: UserManager
+  ) { super(); }
+
+  @mutation()
+  public async addRoleToUser(root: void, { userId, roleId }: { userId?: string, roleId: string }, context: WaspContext): Promise<boolean> {
+    if (context.isUser && !await context.hasPermission(CorePermission.ManageUsers)) {
+      userId = context.userId;
+    }
+    if (!userId) {
+      throw new GraphQLError("must provide id without user token");
+    }
+    const user = await this.db.users.findById(userId).exec();
+    if (!user) {
+      throw new GraphQLError("user not found");
+    }
+    const role = await this.db.roles.findById(roleId).exec();
+    if (!role) {
+      throw new GraphQLError("role not found");
+    }
+    await this.userManager.ops.addRole(user, role);
+    return true;
+  }
+
+  @mutation()
+  public createUser(root: void, { email, password }: { email: string, password: string }) {
+    return this.userManager.ops.create(email, password);
+  }
 
   @query()
-  public async users() {
-    return this.db.users.find().exec();
+  public async user(root: void, { id }: { id?: string }, context: WaspContext) {
+    if (!id) {
+      if (context.isUser) {
+        id = context.userId;
+      } else {
+        throw new GraphQLError("must provide id without user token");
+      }
+    }
+    return this.db.users.findById(id).exec();
+  }
+
+  @query()
+  public async users(root: void, { limit, offset }: { limit: number, offset: number }, context: WaspContext): Promise<User[]> {
+    if (!await context.hasPermission(CorePermission.ManageUsers)) {
+      throw new GraphQLError("not allowed");
+    }
+    return this.db.users.aggregate([{
+      $sort: {
+        email: 1
+      }
+    }, {
+      $limit: limit
+    }, {
+      $skip: offset
+    }]);
+  }
+
+  @resolver("User.roles")
+  public roles(root: User): Promise<Role[]> {
+    return this.db.roles.find({
+      _id: { $in: root.roleIds }
+    }).exec();
   }
 }

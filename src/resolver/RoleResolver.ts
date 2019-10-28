@@ -1,0 +1,61 @@
+import { ForbiddenError, gql } from "apollo-server-core";
+import { GraphQLError } from "graphql";
+import { WaspContext } from "../lib";
+import { RoleManager } from "../manager/RoleManager";
+import { Role } from "../model/Role";
+import { CorePermission } from "../model/shared/CorePermission";
+import { mutation, query, Resolver } from "../Resolver";
+import { MongoService } from "../service";
+
+@Resolver.Service()
+export class RoleResolver extends Resolver {
+  public mutations = gql`
+    type Mutation {
+      addPermissionsToRole(roleId: String!, permissions: [String!]!): Boolean!
+      createRole(name: String!): Role!
+    }
+  `;
+  public queries = gql`
+    type Query {
+      roles: [Role!]!
+    }
+  `;
+  public types = gql`
+    type Role {
+      _id: String!
+      name: String!
+      permissions: [String!]!
+    }
+  `;
+
+  constructor(
+    private db: MongoService,
+    private roleManager: RoleManager
+  ) { super(); }
+
+  @query()
+  public async roles() {
+    return this.db.roles.find({ }).exec();
+  }
+
+  @mutation()
+  public async addPermissionsToRole(root: void, { roleId, permissions }: { roleId: string, permissions: CorePermission[] }, context: WaspContext): Promise<boolean> {
+    if (!await context.hasPermission(CorePermission.ManageRoles)) {
+      throw new ForbiddenError("manage roles");
+    }
+    const role = await this.db.roles.findById(roleId).exec();
+    if (!role) {
+      throw new GraphQLError("role not found");
+    }
+    await this.roleManager.addPermissions(role, permissions);
+    return true;
+  }
+
+  @mutation()
+  public async createRole(root: void, { name }: { name: string }, context: WaspContext): Promise<Role> {
+    if (!await context.hasPermission(CorePermission.ManageRoles)) {
+      throw new ForbiddenError("manage roles");
+    }
+    return this.roleManager.create(name);
+  }
+}

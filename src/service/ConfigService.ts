@@ -6,11 +6,17 @@ dotenv.config();
 
 @Service()
 export class ConfigService {
+  @ConfigService.required("AUTH_JWT_KEY")
+  public authJwtKey!: string;
+
   @ConfigService.required("HTTP_PORT", Number)
   public httpPort!: number;
 
   @ConfigService.required("MONGO_URL")
   public mongoUrl!: string;
+
+  @ConfigService.required("STATIC_SYSTEM_TOKEN")
+  public staticSystemToken!: string;
 
   protected static setValue<T>(key: string, transformer?: (value: string) => T) {
     return (target: ConfigService, fieldName: keyof ConfigService) => {

@@ -1,6 +1,7 @@
 import { getModelForClass, ReturnModelType } from "@typegoose/typegoose";
 import * as mongoose from "mongoose";
 import Container, { Service } from "typedi";
+import { Role } from "../model/Role";
 import { User } from "../model/User";
 import { ConfigService } from "./ConfigService";
 
@@ -12,6 +13,9 @@ interface CollectionMetadata {
 
 @Service()
 export class MongoService {
+  @MongoService.collection(Role, "roles")
+  public roles!: ReturnModelType<typeof Role>;
+
   @MongoService.collection(User, "users")
   public users!: ReturnModelType<typeof User>;
 
