@@ -4,9 +4,9 @@ import { concatAST, DocumentNode } from "graphql";
 import { print as printNode } from "graphql/language/printer";
 import * as _ from "lodash";
 import Container, { Service } from "typedi";
-import { Resolver } from "../Resolver";
-import { ContextService } from "./ContextService";
-import { LoggingService } from "./LoggingService";
+import { Resolver } from "../../Resolver";
+import { ContextService } from "../ContextService";
+import { LoggingService } from "../LoggingService";
 
 @Service()
 export class ApolloService {
@@ -16,7 +16,7 @@ export class ApolloService {
   protected apollo!: ApolloServer;
 
   public init(app: express.Application) {
-    const { resolvers, schema } = this.getAll();
+    const { resolvers, schema } = this.findResolvers();
     this.apollo = new ApolloServer({
       typeDefs: schema,
       resolvers,
@@ -25,7 +25,7 @@ export class ApolloService {
     this.apollo.applyMiddleware({ app });
   }
 
-  protected getAll() {
+  public findResolvers() {
     const targets = Container.getMany(Resolver.token);
     if (targets.length === 0) {
       this.logger.debug("apollo.noResolvers");

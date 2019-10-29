@@ -1,12 +1,6 @@
 import * as moment from "moment";
 import { Service } from "typedi";
-
-enum LogLevel {
-  Debug = "debug",
-  Info = "info",
-  Warn = "warn",
-  Error = "error"
-}
+import { LogLevel } from "./LogLevel";
 
 @Service()
 export class LoggingService {
@@ -17,7 +11,7 @@ export class LoggingService {
   public warn(name: string, data?: any) { return this.log(LogLevel.Warn, name, data); }
   public error(name: string, err: Error, data?: any) { return this.log(LogLevel.Error, name, { err, ...data }); }
 
-  private log(level: LogLevel, name: string, data?: any) {
+  protected log(level: LogLevel, name: string, data?: any) {
     const now = moment();
     let dateFormat = "HH:mm:ss";
     if (now.toDate().toLocaleDateString() !== this.lastLogTime.toDate().toLocaleDateString()) {

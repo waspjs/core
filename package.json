@@ -7,7 +7,9 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "lint": "tslint -p ."
+    "lint": "tslint -p .",
+    "test": "mocha dist/**/*.spec.js",
+    "test:dev": "tsc-watch --onSuccess \"yarn test\""
   },
   "engines": {
     "node": ">=10.3.0"

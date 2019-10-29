@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import "source-map-support/register";
 
-export { gql } from "apollo-server-core";
+export { gql, ForbiddenError } from "apollo-server-core";
 export { default as Container, Service } from "typedi";
 
 export * from "./manager/RoleManager";
@@ -15,6 +15,7 @@ export * from "./service";
 export * from "./util";
 
 export * from "./Application";
+export * from "./Controller";
 export * from "./Resolver";
 export * from "./WebServer";
 

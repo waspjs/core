@@ -1,9 +1,9 @@
 import { getModelForClass, ReturnModelType } from "@typegoose/typegoose";
 import * as mongoose from "mongoose";
 import Container, { Service } from "typedi";
-import { Role } from "../model/Role";
-import { User } from "../model/User";
-import { ConfigService } from "./ConfigService";
+import { Role } from "../../model/Role";
+import { User } from "../../model/User";
+import { ConfigService } from "../ConfigService";
 
 interface CollectionMetadata {
   key: string;
