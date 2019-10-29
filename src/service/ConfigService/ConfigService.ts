@@ -20,6 +20,9 @@ export class ConfigService {
   @ConfigService.required("HTTP_PORT", Number)
   public httpPort!: number;
 
+  @ConfigService.optional("NODE_ENV", e => e === "development")
+  public inDevelopment!: boolean;
+
   @ConfigService.required("MONGO_URL")
   public mongoUrl!: string;
 
