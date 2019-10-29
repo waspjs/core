@@ -28,10 +28,11 @@ export class ApolloService {
   public findResolvers() {
     const targets = Container.getMany(Resolver.token);
     if (targets.length === 0) {
-      this.logger.debug("apollo.noResolvers");
+      this.logger.warn("apollo.noResolvers");
       return { resolvers: { }, schema: "" };
     }
 
+    // tslint doesn't like using Function
     // tslint:disable-next-line ban-types
     const resolvers: { [type: string]: { [field: string]: Function } } = { };
 
@@ -43,6 +44,9 @@ export class ApolloService {
       const { name } = Reflect.getMetadata("resolver", target, key);
       const [type, field] = name.split(".");
       if (!resolvers[type]) { resolvers[type] = { }; }
+      if (resolvers[type][field]) {
+        this.logger.warn("apollo.duplicateResolver", { type, field, replacing: `${target.constructor.name}.${key}` });
+      }
       (resolvers[type] as any)[field] = target[key].bind(target);
     }));
 
@@ -60,7 +64,7 @@ export class ApolloService {
         buildSchema(targets.map(t => t.types)),
         buildSchema(targets.map(t => t.mutations), "Mutation"),
         buildSchema(targets.map(t => t.queries), "Query")
-      ].join("\n")
+      ].join("\n").trim().replace(/\n\n/g, "\n") // making it a bit nicer to print
     };
   }
 }
