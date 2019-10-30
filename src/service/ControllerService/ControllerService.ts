@@ -7,7 +7,7 @@ import { LoggingService } from "../LoggingService";
 import { HttpMethod, WaspController } from "./WaspController";
 
 /**
- * registers HTTP controllers
+ * Registers HTTP controllers
  */
 @Service()
 export class ControllerService {
@@ -23,9 +23,9 @@ export class ControllerService {
   }
 
   public wrapController(controller: (req: express.Request, res: express.Response) => any) {
-    return async (req: express.Request, res: express.Response) => {
+    return async(req: express.Request, res: express.Response) => {
       try {
-        // controllers can return non-promise values, but awaiting non-promises is harmless
+        // Controllers can return non-promise values, but awaiting non-promises is harmless
         const data = await controller(req, res);
         if (data) {
           res.status(200).send(data);

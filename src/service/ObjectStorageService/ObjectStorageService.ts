@@ -1,21 +1,21 @@
 import * as fs from "fs";
-import * as _ from "lodash";
 import * as path from "path";
 import { Readable } from "stream";
+import * as _ from "lodash";
 import { Service } from "typedi";
 import { ConfigService } from "../ConfigService";
 
 /**
- * this is very basic, in production environments should be overridden with S3 implementation
+ * This is very basic, in production environments should be overridden with S3 implementation
  * or something similar
  */
 @Service()
 export class ObjectStorageService {
-  constructor(
+  public constructor(
     private config: ConfigService
   ) { }
 
-  public async createReadStream(key: string, { start, end }: { start: number, end?: number }): Promise<Readable> {
+  public async createReadStream(key: string, { start, end }: { start: number; end?: number }): Promise<Readable> {
     return fs.createReadStream(path.resolve(this.storageDir, key), { start, end });
   }
 

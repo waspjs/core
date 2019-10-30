@@ -37,7 +37,7 @@ export class UserResolver extends WaspResolver {
   private userManager = Container.get(UserManager);
 
   @WaspResolver.mutation()
-  public async addRoleToUser(root: void, { userId, roleId }: { userId?: string, roleId: string }, context: WaspContext): Promise<boolean> {
+  public async addRoleToUser(root: void, { userId, roleId }: { userId?: string; roleId: string }, context: WaspContext): Promise<boolean> {
     if (context.isUser && !await context.hasPermission(CorePermission.ManageUsers)) {
       userId = context.userId;
     }
@@ -57,7 +57,7 @@ export class UserResolver extends WaspResolver {
   }
 
   @WaspResolver.mutation()
-  public createUser(root: void, { email, password }: { email: string, password: string }) {
+  public createUser(root: void, { email, password }: { email: string; password: string }) {
     return this.userManager.ops.create(email, password);
   }
 
@@ -74,7 +74,7 @@ export class UserResolver extends WaspResolver {
   }
 
   @WaspResolver.query()
-  public async users(root: void, { limit, offset }: { limit: number, offset: number }, context: WaspContext): Promise<User[]> {
+  public async users(root: void, { limit, offset }: { limit: number; offset: number }, context: WaspContext): Promise<User[]> {
     if (!await context.hasPermission(CorePermission.ManageUsers)) {
       throw new GraphQLError("not allowed");
     }

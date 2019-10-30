@@ -13,7 +13,7 @@ export enum AuthTokenType {
 }
 
 export class AuthToken {
-  constructor(public payload: AuthTokenPayload) { }
+  public constructor(public payload: AuthTokenPayload) { }
 
   public sign() {
     const config = Container.get(ConfigService);

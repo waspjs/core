@@ -10,7 +10,7 @@ export class WaspContext {
   private token?: AuthToken;
   private _user?: User;
 
-  constructor(public readonly req: express.Request) {
+  public constructor(public readonly req: express.Request) {
     if (req.headers.authorization) {
       const [prefix, token] = req.headers.authorization.split(" ");
       if (prefix.toLowerCase() === "bearer") {
@@ -21,18 +21,18 @@ export class WaspContext {
     }
   }
 
-  get hasToken() {
+  public get hasToken() {
     return !!this.token;
   }
 
-  get isUser() {
+  public get isUser() {
     return this.token && this.token.payload.type === AuthTokenType.User;
   }
-  get isSystem() {
+  public get isSystem() {
     return this.token && this.token.payload.type === AuthTokenType.System;
   }
 
-  get userId(): string | undefined {
+  public get userId(): string | undefined {
     if (!this.token || !this.isUser) { return undefined; }
     return this.token.payload.userId;
   }

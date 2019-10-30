@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import Container, { Token } from "typedi";
 
-export function findDecoratedMethods<Metadata, Target extends any>(
+export const findDecoratedMethods = <Metadata, Target extends any>(
   token: Token<Target>,
   metadataKey: string,
   customCheck?: (property: any) => boolean
@@ -9,8 +9,8 @@ export function findDecoratedMethods<Metadata, Target extends any>(
   target: Target;
   key: string;
   passedCustomCheck: boolean;
-})[] {
-  return _.compact(_.flatten(Container.getMany(token).map(target => {
+})[] =>
+  _.compact(_.flatten(Container.getMany(token).map(target => {
     // ...(target) gets properties such as: x = () => { }
     // ...(target.constructor.prototype) gets methods such as: x() { }
     const keys = Object.getOwnPropertyNames(target).concat(Object.getOwnPropertyNames(target.constructor.prototype));
@@ -27,4 +27,3 @@ export function findDecoratedMethods<Metadata, Target extends any>(
       };
     });
   })));
-}

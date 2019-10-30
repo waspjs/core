@@ -43,25 +43,25 @@ export class ApolloService {
         this.logger.warn("apollo.duplicateResolver", { type, field, replacement: `${target.constructor.name}.${key}` });
       }
       const value = (target as any)[key];
-      // don't bind if it's a Scalar
+      // Don't bind if it's a Scalar
       (resolvers[type] as any)[field] = passedCustomCheck ? value : value.bind(target);
     });
 
     const buildSchema = (nodes: (DocumentNode | undefined)[], typeName?: string): string => {
       let printedSchema = printNode(concatAST(_.compact(nodes)));
-      if (typeName) { // transform many "type typeName { ... }" blocks into one
+      if (typeName) { // Transform many "type typeName { ... }" blocks into one
         printedSchema = `type ${typeName} {\n${printedSchema.replace(new RegExp(`type ${typeName} \\{([^\\}]+)\\}`, "g"), "$1")}}`;
       }
       return printedSchema;
     };
 
-    // make sure we don't naively (oops) have duplicate schema entries
+    // Make sure we don't naively (oops) have duplicate schema entries
     const resolverClasses = _.uniqBy(metadatas, m => m.target.constructor.toString()).map(m => m.target);
     const schema = [
       buildSchema(resolverClasses.map(t => t.types)),
       buildSchema(resolverClasses.map(t => t.mutations), "Mutation"),
       buildSchema(resolverClasses.map(t => t.queries), "Query")
-    ].join("\n").trim().replace(/\n\n/g, "\n"); // making it a bit nicer to print
+    ].join("\n").trim().replace(/\n\n/g, "\n"); // Making it a bit nicer to print
 
     return { resolvers, schema };
   }

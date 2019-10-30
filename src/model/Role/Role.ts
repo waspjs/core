@@ -11,7 +11,7 @@ export class Role {
   @arrayProp({ required: true, items: String })
   public permissions!: string[];
 
-  constructor(init?: ModelInit<Role>) {
+  public constructor(init?: ModelInit<Role>) {
     Object.assign(this, init);
   }
 }
