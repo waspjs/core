@@ -1,6 +1,6 @@
 import { ApolloServer } from "apollo-server-express";
 import * as express from "express";
-import { concatAST, DocumentNode } from "graphql";
+import { concatAST, DocumentNode, GraphQLScalarType } from "graphql";
 import { print as printNode } from "graphql/language/printer";
 import * as _ from "lodash";
 import Container, { Service } from "typedi";
@@ -27,14 +27,14 @@ export class ApolloService {
   }
 
   public findResolvers() {
-    const metadatas = findDecoratedMethods<{ name: string }, WaspResolver>(WaspResolver.token, "resolver");
+    const metadatas = findDecoratedMethods<{ name: string }, WaspResolver>(WaspResolver.token, "resolver", v => v instanceof GraphQLScalarType);
     if (metadatas.length === 0) {
       this.logger.warn("apollo.noResolvers");
       return { resolvers: { }, schema: "" };
     }
     const resolvers: { [type: string]: { [field: string]: Function } } = { };
 
-    metadatas.forEach(({ name, target, key }) => {
+    metadatas.forEach(({ name, target, key, passedCustomCheck }) => {
       const [type, field] = name.split(".");
       if (!resolvers[type]) {
         resolvers[type] = { };
@@ -42,24 +42,27 @@ export class ApolloService {
       if (resolvers[type][field]) {
         this.logger.warn("apollo.duplicateResolver", { type, field, replacement: `${target.constructor.name}.${key}` });
       }
-      (resolvers[type] as any)[field] = (target as any)[key].bind(target);
+      const value = (target as any)[key];
+      // don't bind if it's a Scalar
+      (resolvers[type] as any)[field] = passedCustomCheck ? value : value.bind(target);
     });
 
     const buildSchema = (nodes: (DocumentNode | undefined)[], typeName?: string): string => {
-      let schema = printNode(concatAST(_.compact(nodes)));
-      if (typeName) {
-        schema = `type ${typeName} {\n${schema.replace(new RegExp(`type ${typeName} \\{([^\\}]+)\\}`, "g"), "$1")}}`;
+      let printedSchema = printNode(concatAST(_.compact(nodes)));
+      if (typeName) { // transform many "type typeName { ... }" blocks into one
+        printedSchema = `type ${typeName} {\n${printedSchema.replace(new RegExp(`type ${typeName} \\{([^\\}]+)\\}`, "g"), "$1")}}`;
       }
-      return schema;
+      return printedSchema;
     };
 
-    return {
-      resolvers,
-      schema: [
-        buildSchema(metadatas.map(m => m.target.types)),
-        buildSchema(metadatas.map(m => m.target.mutations), "Mutation"),
-        buildSchema(metadatas.map(m => m.target.queries), "Query")
-      ].join("\n").trim().replace(/\n\n/g, "\n") // making it a bit nicer to print
-    };
+    // make sure we don't naively (oops) have duplicate schema entries
+    const resolverClasses = _.uniqBy(metadatas, m => m.target.constructor.toString()).map(m => m.target);
+    const schema = [
+      buildSchema(resolverClasses.map(t => t.types)),
+      buildSchema(resolverClasses.map(t => t.mutations), "Mutation"),
+      buildSchema(resolverClasses.map(t => t.queries), "Query")
+    ].join("\n").trim().replace(/\n\n/g, "\n"); // making it a bit nicer to print
+
+    return { resolvers, schema };
   }
 }

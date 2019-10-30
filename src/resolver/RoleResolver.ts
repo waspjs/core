@@ -1,5 +1,6 @@
 import { ForbiddenError, gql } from "apollo-server-core";
 import { GraphQLError } from "graphql";
+import { Container } from "typedi";
 import { WaspContext } from "../lib";
 import { RoleManager } from "../manager/RoleManager";
 import { Role } from "../model/Role";
@@ -27,10 +28,8 @@ export class RoleResolver extends WaspResolver {
     }
   `;
 
-  constructor(
-    private db: MongoService,
-    private roleManager: RoleManager
-  ) { super(); }
+  private db = Container.get(MongoService);
+  private roleManager = Container.get(RoleManager);
 
   @WaspResolver.query()
   public async roles() {

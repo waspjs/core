@@ -17,4 +17,5 @@ export * from "./util";
 export * from "./Application";
 export * from "./WebServer";
 
-import "./resolver/index";
+import "./controller";
+import "./resolver";

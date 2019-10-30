@@ -1,4 +1,4 @@
 export * from "./AuthResolver";
-export * from "./DatetimeResolver";
+export * from "./DateResolver";
 export * from "./RoleResolver";
 export * from "./UserResolver";

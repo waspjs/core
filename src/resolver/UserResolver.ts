@@ -1,5 +1,6 @@
 import { gql } from "apollo-server-core";
 import { GraphQLError } from "graphql";
+import Container from "typedi";
 import { WaspContext } from "../lib";
 import { UserManager } from "../manager/UserManager";
 import { Role } from "../model/Role";
@@ -32,10 +33,8 @@ export class UserResolver extends WaspResolver {
     }
   `;
 
-  constructor(
-    private db: MongoService,
-    private userManager: UserManager
-  ) { super(); }
+  private db = Container.get(MongoService);
+  private userManager = Container.get(UserManager);
 
   @WaspResolver.mutation()
   public async addRoleToUser(root: void, { userId, roleId }: { userId?: string, roleId: string }, context: WaspContext): Promise<boolean> {

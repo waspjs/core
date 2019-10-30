@@ -17,7 +17,7 @@ export class ControllerService {
   public init(app: express.Application) {
     const metadatas = findDecoratedMethods<{ method: HttpMethod; path: string }, any>(WaspController.token, "controller");
     metadatas.forEach(({ method, path, target, key }) => {
-      const matcher = (app as any)[method.toLowerCase()] as express.IRouterMatcher<express.Application>;
+      const matcher = (app as any)[method.toLowerCase()].bind(app) as express.IRouterMatcher<express.Application>;
       matcher(path, this.wrapController(target[key]));
     });
   }
