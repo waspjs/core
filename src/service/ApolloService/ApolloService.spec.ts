@@ -38,7 +38,7 @@ describe("service", () => describe("ApolloService", () => {
     it("should return one correctly", () => {
       @WaspResolver.Service()
       // @ts-ignore
-      class TestResolver1 extends Resolver {
+      class TestResolver1 extends WaspResolver {
         public queries = gql`
           type Query { test: String! }
         `;
@@ -53,7 +53,7 @@ describe("service", () => describe("ApolloService", () => {
     it("should warn when duplicates are found", () => {
       @WaspResolver.Service()
       // @ts-ignore
-      class TestResolver1 {
+      class TestResolver1 extends WaspResolver {
         @WaspResolver.query()
         public test() { return "hello"; }
 
@@ -68,7 +68,7 @@ describe("service", () => describe("ApolloService", () => {
         data: {
           type: "Query",
           field: "test",
-          replacing: "TestResolver1.test2"
+          replacement: "TestResolver1.test2"
         }
       }]);
     });

@@ -1,2 +1,2 @@
-export * from "./WaspController";
 export * from "./ControllerService";
+export * from "./WaspController";

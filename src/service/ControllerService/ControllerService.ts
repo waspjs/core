@@ -1,9 +1,10 @@
 import * as express from "express";
 import * as _ from "lodash";
 import Container, { Service } from "typedi";
+import { findDecoratedMethods } from "../../util";
 import { ConfigService } from "../ConfigService";
 import { LoggingService } from "../LoggingService";
-import { WaspController } from "./WaspController";
+import { HttpMethod, WaspController } from "./WaspController";
 
 /**
  * registers HTTP controllers
@@ -14,34 +15,14 @@ export class ControllerService {
   private logger = Container.get(LoggingService);
 
   public init(app: express.Application) {
-    const controllers = this.findControllers();
-    for (const { method, path, handler } of controllers) {
-      app[method](path, handler);
-    }
+    const metadatas = findDecoratedMethods<{ method: HttpMethod; path: string }, any>(WaspController.token, "controller");
+    metadatas.forEach(({ method, path, target, key }) => {
+      const matcher = (app as any)[method.toLowerCase()] as express.IRouterMatcher<express.Application>;
+      matcher(path, this.wrapController(target[key]));
+    });
   }
 
-  public findControllers(): {
-    method: "get" | "post" | "delete" | "patch" | "put";
-    path: string;
-    handler: ReturnType<ControllerService["wrapController"]>
-  }[] {
-    const targets = Container.getMany(WaspController.token);
-    return _.compact(_.flatten(targets.map((target: any) =>
-      Object.getOwnPropertyNames(target.constructor.prototype).map(key => {
-        if (!Reflect.hasMetadata("controller", target, key)) { return; }
-        if (typeof(target[key]) !== "function") {
-          throw new Error("Can't use " + target.constructor.name + "." + key + " as a controller");
-        }
-        const { method, path } = Reflect.getMetadata("controller", target, key);
-        return {
-          method, path,
-          handler: this.wrapController(target[key])
-        };
-      })
-    )));
-  }
-
-  protected wrapController(controller: (req: express.Request, res: express.Response) => any) {
+  public wrapController(controller: (req: express.Request, res: express.Response) => any) {
     return async (req: express.Request, res: express.Response) => {
       try {
         // controllers can return non-promise values, but awaiting non-promises is harmless
