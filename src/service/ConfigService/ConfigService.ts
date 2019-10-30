@@ -32,7 +32,7 @@ export class ConfigService {
   @ConfigService.required("STATIC_SYSTEM_TOKEN")
   public staticSystemToken!: string;
 
-  constructor() {
+  public constructor() {
     const configs = Reflect.getMetadata("configs", this);
     for (const { fieldName, key, transformer, isRequired } of configs) {
       const value = process.env[key];

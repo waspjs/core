@@ -13,10 +13,8 @@ export class WaspController {
   public static put = WaspController.buildDefiner("PUT");
 
   protected static buildDefiner(method: HttpMethod) {
-    return (path: string) => {
-      return (target: any, key: string) => {
-        Reflect.defineMetadata("controller", { method, path }, target, key);
-      };
+    return (path: string) => (target: any, key: string) => {
+      Reflect.defineMetadata("controller", { method, path }, target, key);
     };
   }
 }

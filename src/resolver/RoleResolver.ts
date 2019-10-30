@@ -37,7 +37,7 @@ export class RoleResolver extends WaspResolver {
   }
 
   @WaspResolver.mutation()
-  public async addPermissionsToRole(root: void, { roleId, permissions }: { roleId: string, permissions: CorePermission[] }, context: WaspContext): Promise<boolean> {
+  public async addPermissionsToRole(root: void, { roleId, permissions }: { roleId: string; permissions: CorePermission[] }, context: WaspContext): Promise<boolean> {
     if (!await context.hasPermission(CorePermission.ManageRoles)) {
       throw new ForbiddenError("manage roles");
     }

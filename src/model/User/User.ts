@@ -21,7 +21,7 @@ export class User {
   @arrayProp({ required: true, items: String })
   public roleIds!: string[];
 
-  constructor(init?: ModelInit<User>) {
+  public constructor(init?: ModelInit<User>) {
     Object.assign(this, init);
   }
 }

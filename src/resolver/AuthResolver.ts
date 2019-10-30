@@ -39,10 +39,10 @@ export class AuthResolver extends WaspResolver {
   }
 
   @WaspResolver.mutation()
-  public async createUserToken(root: void, { id, email, password }: { id?: string, email?: string, password?: string }, context: WaspContext): Promise<AuthToken> {
+  public async createUserToken(root: void, { id, email, password }: { id?: string; email?: string; password?: string }, context: WaspContext): Promise<AuthToken> {
     if (context.isUser) {
       id = context.userId;
-    } else if (!(context.isSystem && id)) { // not authed
+    } else if (!(context.isSystem && id)) { // Not authed
       if (!email || !password) {
         throw new GraphQLError("username and password are required");
       }

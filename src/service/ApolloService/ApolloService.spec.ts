@@ -1,7 +1,7 @@
-// tslint:disable max-classes-per-file
+/* eslint-disable max-classes-per-file */
 
-import { gql } from "apollo-server-core";
 import * as assert from "assert";
+import { gql } from "apollo-server-core";
 import Container from "typedi";
 import { ConfigService } from "../ConfigService";
 import { MockConfigService } from "../ConfigService/ConfigService.mock";
@@ -12,7 +12,8 @@ import { MockLoggingService } from "../LoggingService/LoggingService.mock";
 import { ApolloService } from "./ApolloService";
 import { WaspResolver } from "./WaspResolver";
 
-// ts-ignore comments are to disable "unused" warnings
+
+// The ts-ignore comments are to disable "unused" warnings
 
 describe("service", () => describe("ApolloService", () => {
   const apolloService = () => Container.get(ApolloService);
@@ -48,7 +49,7 @@ describe("service", () => describe("ApolloService", () => {
 
       const { resolvers, schema } = apolloService().findResolvers();
       assert.strictEqual(resolvers.Query.test(), "hello");
-      assert.strictEqual(schema, `type Mutation {\n}\ntype Query {\n  test: String!\n}`);
+      assert.strictEqual(schema, "type Mutation {\n}\ntype Query {\n  test: String!\n}");
     });
     it("should warn when duplicates are found", () => {
       @WaspResolver.Service()

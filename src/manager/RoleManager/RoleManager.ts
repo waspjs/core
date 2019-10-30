@@ -4,7 +4,7 @@ import { MongoService } from "../../service";
 
 @Service()
 export class RoleManager {
-  constructor(
+  public constructor(
     private db: MongoService
   ) { }
 

@@ -1,5 +1,5 @@
-import * as express from "express";
 import * as http from "http";
+import * as express from "express";
 import Container, { Service } from "typedi";
 import { ApolloService, ConfigService, ControllerService, LoggingService } from "./service";
 

@@ -27,7 +27,7 @@ export class MongoService {
     this.connection = await mongoose.createConnection(this.config.mongoUrl, {
       useNewUrlParser: true,
       useUnifiedTopology: true
-    }).then(c => c); // workaround so that linter recognizes this as a promise :(
+    }).then(c => c); // Workaround so that linter recognizes this as a promise :(
     const collections: CollectionMetadata[] = Reflect.getMetadata("collections", this);
     for (const { model, key, name } of collections) {
       (this as any)[key] = getModelForClass(model, {
