@@ -15,8 +15,6 @@ export * from "./service";
 export * from "./util";
 
 export * from "./Application";
-export * from "./Controller";
-export * from "./Resolver";
 export * from "./WebServer";
 
 import "./resolver/index";

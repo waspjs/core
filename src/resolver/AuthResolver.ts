@@ -3,11 +3,10 @@ import { GraphQLError } from "graphql";
 import { AuthToken, AuthTokenType, WaspContext } from "../lib";
 import { UserManager } from "../manager/UserManager";
 import { User, UserAuthType } from "../model/User";
-import { mutation, Resolver, resolver } from "../Resolver";
-import { MongoService } from "../service";
+import { MongoService, WaspResolver } from "../service";
 
-@Resolver.Service()
-export class AuthResolver extends Resolver {
+@WaspResolver.Service()
+export class AuthResolver extends WaspResolver {
   public mutations = gql`
     type Mutation {
       createSystemToken: AuthToken!
@@ -30,7 +29,7 @@ export class AuthResolver extends Resolver {
     private userManager: UserManager
   ) { super(); }
 
-  @mutation()
+  @WaspResolver.mutation()
   public async createSystemToken(root: void, args: void, context: WaspContext): Promise<AuthToken> {
     if (!context.isSystem) {
       throw new GraphQLError("system token required");
@@ -40,7 +39,7 @@ export class AuthResolver extends Resolver {
     });
   }
 
-  @mutation()
+  @WaspResolver.mutation()
   public async createUserToken(root: void, { id, email, password }: { id?: string, email?: string, password?: string }, context: WaspContext): Promise<AuthToken> {
     if (context.isUser) {
       id = context.userId;
@@ -64,17 +63,17 @@ export class AuthResolver extends Resolver {
     });
   }
 
-  @resolver("AuthToken.token")
+  @WaspResolver.resolver("AuthToken.token")
   public token(root: AuthToken): string {
     return root.sign();
   }
 
-  @resolver("AuthToken.type")
+  @WaspResolver.resolver("AuthToken.type")
   public type(root: AuthToken): AuthTokenType {
     return root.payload.type;
   }
 
-  @resolver("AuthToken.user")
+  @WaspResolver.resolver("AuthToken.user")
   public async user(root: AuthToken): Promise<User> {
     if (!root.payload.userId) {
       throw new GraphQLError("not a user token");

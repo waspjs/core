@@ -1,16 +1,15 @@
 import { gql } from "apollo-server-core";
 import { GraphQLError } from "graphql";
-import { Service } from "typedi";
 import { WaspContext } from "../lib";
 import { UserManager } from "../manager/UserManager";
 import { Role } from "../model/Role";
 import { CorePermission } from "../model/shared/CorePermission";
 import { User } from "../model/User";
-import { mutation, query, Resolver, resolver } from "../Resolver";
+import { WaspResolver } from "../service";
 import { MongoService } from "../service/MongoService";
 
-@Service({ id: Resolver.token, multiple: true })
-export class UserResolver extends Resolver {
+@WaspResolver.Service()
+export class UserResolver extends WaspResolver {
   public mutations = gql`
     type Mutation {
       addRoleToUser(userId: String, roleId: String!): Boolean!
@@ -38,7 +37,7 @@ export class UserResolver extends Resolver {
     private userManager: UserManager
   ) { super(); }
 
-  @mutation()
+  @WaspResolver.mutation()
   public async addRoleToUser(root: void, { userId, roleId }: { userId?: string, roleId: string }, context: WaspContext): Promise<boolean> {
     if (context.isUser && !await context.hasPermission(CorePermission.ManageUsers)) {
       userId = context.userId;
@@ -58,12 +57,12 @@ export class UserResolver extends Resolver {
     return true;
   }
 
-  @mutation()
+  @WaspResolver.mutation()
   public createUser(root: void, { email, password }: { email: string, password: string }) {
     return this.userManager.ops.create(email, password);
   }
 
-  @query()
+  @WaspResolver.query()
   public async user(root: void, { id }: { id?: string }, context: WaspContext) {
     if (!id) {
       if (context.isUser) {
@@ -75,7 +74,7 @@ export class UserResolver extends Resolver {
     return this.db.users.findById(id).exec();
   }
 
-  @query()
+  @WaspResolver.query()
   public async users(root: void, { limit, offset }: { limit: number, offset: number }, context: WaspContext): Promise<User[]> {
     if (!await context.hasPermission(CorePermission.ManageUsers)) {
       throw new GraphQLError("not allowed");
@@ -91,7 +90,7 @@ export class UserResolver extends Resolver {
     }]);
   }
 
-  @resolver("User.roles")
+  @WaspResolver.resolver("User.roles")
   public roles(root: User): Promise<Role[]> {
     return this.db.roles.find({
       _id: { $in: root.roleIds }

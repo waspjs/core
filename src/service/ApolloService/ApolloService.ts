@@ -4,9 +4,9 @@ import { concatAST, DocumentNode } from "graphql";
 import { print as printNode } from "graphql/language/printer";
 import * as _ from "lodash";
 import Container, { Service } from "typedi";
-import { Resolver } from "../../Resolver";
 import { ContextService } from "../ContextService";
 import { LoggingService } from "../LoggingService";
+import { WaspResolver } from "./WaspResolver";
 
 @Service()
 export class ApolloService {
@@ -26,7 +26,7 @@ export class ApolloService {
   }
 
   public findResolvers() {
-    const targets = Container.getMany(Resolver.token);
+    const targets = Container.getMany(WaspResolver.token);
     if (targets.length === 0) {
       this.logger.warn("apollo.noResolvers");
       return { resolvers: { }, schema: "" };

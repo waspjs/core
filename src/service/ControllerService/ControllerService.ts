@@ -1,9 +1,9 @@
 import * as express from "express";
 import * as _ from "lodash";
 import Container, { Service } from "typedi";
-import { Controller } from "../../Controller";
 import { ConfigService } from "../ConfigService";
 import { LoggingService } from "../LoggingService";
+import { WaspController } from "./WaspController";
 
 /**
  * registers HTTP controllers
@@ -25,7 +25,7 @@ export class ControllerService {
     path: string;
     handler: ReturnType<ControllerService["wrapController"]>
   }[] {
-    const targets = Container.getMany(Controller.token);
+    const targets = Container.getMany(WaspController.token);
     return _.compact(_.flatten(targets.map((target: any) =>
       Object.getOwnPropertyNames(target.constructor.prototype).map(key => {
         if (!Reflect.hasMetadata("controller", target, key)) { return; }

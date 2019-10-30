@@ -4,11 +4,10 @@ import { WaspContext } from "../lib";
 import { RoleManager } from "../manager/RoleManager";
 import { Role } from "../model/Role";
 import { CorePermission } from "../model/shared/CorePermission";
-import { mutation, query, Resolver } from "../Resolver";
-import { MongoService } from "../service";
+import { MongoService, WaspResolver } from "../service";
 
-@Resolver.Service()
-export class RoleResolver extends Resolver {
+@WaspResolver.Service()
+export class RoleResolver extends WaspResolver {
   public mutations = gql`
     type Mutation {
       addPermissionsToRole(roleId: String!, permissions: [String!]!): Boolean!
@@ -33,12 +32,12 @@ export class RoleResolver extends Resolver {
     private roleManager: RoleManager
   ) { super(); }
 
-  @query()
+  @WaspResolver.query()
   public async roles() {
     return this.db.roles.find({ }).exec();
   }
 
-  @mutation()
+  @WaspResolver.mutation()
   public async addPermissionsToRole(root: void, { roleId, permissions }: { roleId: string, permissions: CorePermission[] }, context: WaspContext): Promise<boolean> {
     if (!await context.hasPermission(CorePermission.ManageRoles)) {
       throw new ForbiddenError("manage roles");
@@ -51,7 +50,7 @@ export class RoleResolver extends Resolver {
     return true;
   }
 
-  @mutation()
+  @WaspResolver.mutation()
   public async createRole(root: void, { name }: { name: string }, context: WaspContext): Promise<Role> {
     if (!await context.hasPermission(CorePermission.ManageRoles)) {
       throw new ForbiddenError("manage roles");

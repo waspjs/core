@@ -3,7 +3,6 @@
 import { gql } from "apollo-server-core";
 import * as assert from "assert";
 import Container from "typedi";
-import { query, Resolver } from "../../Resolver";
 import { ConfigService } from "../ConfigService";
 import { MockConfigService } from "../ConfigService/ConfigService.mock";
 import { ContextService } from "../ContextService";
@@ -11,6 +10,7 @@ import { MockContextService } from "../ContextService/ContextService.mock";
 import { LoggingService, LogLevel } from "../LoggingService";
 import { MockLoggingService } from "../LoggingService/LoggingService.mock";
 import { ApolloService } from "./ApolloService";
+import { WaspResolver } from "./WaspResolver";
 
 // ts-ignore comments are to disable "unused" warnings
 
@@ -36,13 +36,13 @@ describe("service", () => describe("ApolloService", () => {
       }]);
     });
     it("should return one correctly", () => {
-      @Resolver.Service()
+      @WaspResolver.Service()
       // @ts-ignore
       class TestResolver1 extends Resolver {
         public queries = gql`
           type Query { test: String! }
         `;
-        @query()
+        @WaspResolver.query()
         public test() { return "hello"; }
       }
 
@@ -51,13 +51,13 @@ describe("service", () => describe("ApolloService", () => {
       assert.strictEqual(schema, `type Mutation {\n}\ntype Query {\n  test: String!\n}`);
     });
     it("should warn when duplicates are found", () => {
-      @Resolver.Service()
+      @WaspResolver.Service()
       // @ts-ignore
       class TestResolver1 {
-        @query()
+        @WaspResolver.query()
         public test() { return "hello"; }
 
-        @query("test")
+        @WaspResolver.query("test")
         public test2() { return "hello"; }
       }
 

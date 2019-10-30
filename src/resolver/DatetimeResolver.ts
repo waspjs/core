@@ -1,15 +1,15 @@
 import { gql } from "apollo-server-core";
 import * as GraphqlDatetime from "graphql-type-datetime";
-import { Resolver, resolver } from "../Resolver";
+import { WaspResolver } from "../service";
 
-@Resolver.Service()
-export class DatetimeResolver extends Resolver {
+@WaspResolver.Service()
+export class DatetimeResolver extends WaspResolver {
   public types = gql`
     scalar Date
     scalar Datetime
   `;
 
-  @resolver("Date")
-  @resolver("Datetime")
+  @WaspResolver.resolver("Date")
+  @WaspResolver.resolver("Datetime")
   public readonly Datetime = GraphqlDatetime;
 }
