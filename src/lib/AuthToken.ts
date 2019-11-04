@@ -13,14 +13,14 @@ export enum AuthTokenType {
 }
 
 export class AuthToken {
-  public constructor(public payload: AuthTokenPayload) { }
+  constructor(readonly payload: AuthTokenPayload) { }
 
-  public sign() {
+  sign() {
     const config = Container.get(ConfigService);
     return jwt.sign(this.payload, config.authJwtKey);
   }
 
-  public static parse(token: string) {
+  static parse(token: string) {
     const config = Container.get(ConfigService);
     if (!token) {
       return undefined;

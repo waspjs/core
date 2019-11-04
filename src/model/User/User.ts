@@ -4,24 +4,24 @@ import { UserAuth } from "./auth";
 
 export class User {
   @idProp()
-  public _id!: string;
+  _id!: string;
 
   @prop({ required: true, _id: false })
-  public auth!: UserAuth;
+  auth!: UserAuth;
 
   @prop({ required: true })
-  public createdAt!: Date;
+  createdAt!: Date;
 
   @prop({ required: true })
-  public email!: string;
+  email!: string;
 
   @arrayProp({ required: true, items: String })
-  public permissions!: string[];
+  permissions!: string[];
 
   @arrayProp({ required: true, items: String })
-  public roleIds!: string[];
+  roleIds!: string[];
 
-  public constructor(init?: ModelInit<User>) {
+  constructor(init?: ModelInit<User>) {
     Object.assign(this, init);
   }
 }

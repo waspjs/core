@@ -4,10 +4,10 @@ import { WaspResolver } from "../service";
 
 @WaspResolver.Service()
 export class DateResolver extends WaspResolver {
-  public types = gql`
+  types = gql`
     scalar Date
   `;
 
   @WaspResolver.resolver("Date")
-  public readonly date = GraphqlDatetime;
+  readonly date = GraphqlDatetime;
 }

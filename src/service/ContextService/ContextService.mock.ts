@@ -1,3 +1,3 @@
 export class MockContextService {
-  public getContext = () => true;
+  getContext = () => true;
 }

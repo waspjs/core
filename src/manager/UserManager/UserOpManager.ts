@@ -10,7 +10,7 @@ export class UserOpManager {
   private authManager = Container.get(UserAuthManager);
   private db = Container.get(MongoService);
 
-  public async create(email: string, password: string) {
+  async create(email: string, password: string) {
     const count = await this.db.users.countDocuments({ email }).exec();
     if (count > 0) {
       throw new Error("user with that email already exists");
@@ -29,7 +29,7 @@ export class UserOpManager {
     }));
   }
 
-  public async addRole(user: User, role: Role) {
+  async addRole(user: User, role: Role) {
     await this.db.users.updateOne({
       _id: user._id
     }, {
@@ -42,7 +42,7 @@ export class UserOpManager {
     }).exec();
   }
 
-  public async removeRole(user: User, role: Role) {
+  async removeRole(user: User, role: Role) {
     const remainingRoles = await this.db.roles.find({
       _id: {
         $and: [{

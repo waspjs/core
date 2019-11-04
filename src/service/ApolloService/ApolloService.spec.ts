@@ -40,11 +40,11 @@ describe("service", () => describe("ApolloService", () => {
       @WaspResolver.Service()
       // @ts-ignore
       class TestResolver1 extends WaspResolver {
-        public queries = gql`
+        queries = gql`
           type Query { test: String! }
         `;
         @WaspResolver.query()
-        public test() { return "hello"; }
+        test() { return "hello"; }
       }
 
       const { resolvers, schema } = apolloService().findResolvers();
@@ -56,10 +56,10 @@ describe("service", () => describe("ApolloService", () => {
       // @ts-ignore
       class TestResolver1 extends WaspResolver {
         @WaspResolver.query()
-        public test() { return "hello"; }
+        test() { return "hello"; }
 
         @WaspResolver.query("test")
-        public test2() { return "hello"; }
+        test2() { return "hello"; }
       }
 
       apolloService().findResolvers();

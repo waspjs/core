@@ -8,16 +8,16 @@ import { MongoService, WaspResolver } from "../service";
 
 @WaspResolver.Service()
 export class AuthResolver extends WaspResolver {
-  public mutations = gql`
+  mutations = gql`
     type Mutation {
       createSystemToken: AuthToken!
       createUserToken(id: String, email: String, password: String): AuthToken!
     }
   `;
-  public types = gql`
+  types = gql`
     type AuthToken {
       token: String!
-      type: AuthTokenType
+      type: AuthTokenType!
       user: User!
     }
     enum AuthTokenType {
@@ -29,7 +29,7 @@ export class AuthResolver extends WaspResolver {
   private userManager = Container.get(UserManager);
 
   @WaspResolver.mutation()
-  public async createSystemToken(root: void, args: void, context: WaspContext): Promise<AuthToken> {
+  async createSystemToken(root: void, args: void, context: WaspContext): Promise<AuthToken> {
     if (!context.isSystem) {
       throw new GraphQLError("system token required");
     }
@@ -39,7 +39,7 @@ export class AuthResolver extends WaspResolver {
   }
 
   @WaspResolver.mutation()
-  public async createUserToken(root: void, { id, email, password }: { id?: string; email?: string; password?: string }, context: WaspContext): Promise<AuthToken> {
+  async createUserToken(root: void, { id, email, password }: { id?: string; email?: string; password?: string }, context: WaspContext): Promise<AuthToken> {
     if (context.isUser) {
       id = context.userId;
     } else if (!(context.isSystem && id)) { // Not authed
@@ -63,17 +63,17 @@ export class AuthResolver extends WaspResolver {
   }
 
   @WaspResolver.resolver("AuthToken.token")
-  public token(root: AuthToken): string {
+  token(root: AuthToken): string {
     return root.sign();
   }
 
   @WaspResolver.resolver("AuthToken.type")
-  public type(root: AuthToken): AuthTokenType {
+  type(root: AuthToken): AuthTokenType {
     return root.payload.type;
   }
 
   @WaspResolver.resolver("AuthToken.user")
-  public async user(root: AuthToken): Promise<User> {
+  async user(root: AuthToken): Promise<User> {
     if (!root.payload.userId) {
       throw new GraphQLError("not a user token");
     }

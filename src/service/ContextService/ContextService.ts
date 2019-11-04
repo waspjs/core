@@ -5,5 +5,5 @@ import { WaspContext } from "../../lib";
 
 @Service()
 export class ContextService {
-  public getContext: ContextFunction<ExpressContext, object> = ({ req }) => new WaspContext(req);
+  getContext: ContextFunction<ExpressContext, object> = ({ req }) => new WaspContext(req);
 }

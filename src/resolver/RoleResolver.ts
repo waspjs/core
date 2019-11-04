@@ -9,18 +9,18 @@ import { MongoService, WaspResolver } from "../service";
 
 @WaspResolver.Service()
 export class RoleResolver extends WaspResolver {
-  public mutations = gql`
+  mutations = gql`
     type Mutation {
       addPermissionsToRole(roleId: String!, permissions: [String!]!): Boolean!
       createRole(name: String!): Role!
     }
   `;
-  public queries = gql`
+  queries = gql`
     type Query {
       roles: [Role!]!
     }
   `;
-  public types = gql`
+  types = gql`
     type Role {
       _id: String!
       name: String!
@@ -32,12 +32,12 @@ export class RoleResolver extends WaspResolver {
   private roleManager = Container.get(RoleManager);
 
   @WaspResolver.query()
-  public async roles() {
+  async roles() {
     return this.db.roles.find({ }).exec();
   }
 
   @WaspResolver.mutation()
-  public async addPermissionsToRole(root: void, { roleId, permissions }: { roleId: string; permissions: CorePermission[] }, context: WaspContext): Promise<boolean> {
+  async addPermissionsToRole(root: void, { roleId, permissions }: { roleId: string; permissions: CorePermission[] }, context: WaspContext): Promise<boolean> {
     if (!await context.hasPermission(CorePermission.ManageRoles)) {
       throw new ForbiddenError("manage roles");
     }
@@ -50,7 +50,7 @@ export class RoleResolver extends WaspResolver {
   }
 
   @WaspResolver.mutation()
-  public async createRole(root: void, { name }: { name: string }, context: WaspContext): Promise<Role> {
+  async createRole(root: void, { name }: { name: string }, context: WaspContext): Promise<Role> {
     if (!await context.hasPermission(CorePermission.ManageRoles)) {
       throw new ForbiddenError("manage roles");
     }

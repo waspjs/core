@@ -3,15 +3,15 @@ import { idProp, ModelInit } from "../../util";
 
 export class Role {
   @idProp()
-  public _id!: string;
+  _id!: string;
 
   @prop({ required: true })
-  public name!: string;
+  name!: string;
 
   @arrayProp({ required: true, items: String })
-  public permissions!: string[];
+  permissions!: string[];
 
-  public constructor(init?: ModelInit<Role>) {
+  constructor(init?: ModelInit<Role>) {
     Object.assign(this, init);
   }
 }

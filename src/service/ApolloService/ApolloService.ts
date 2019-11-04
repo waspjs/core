@@ -16,7 +16,7 @@ export class ApolloService {
 
   protected apollo!: ApolloServer;
 
-  public init(app: express.Application) {
+  init(app: express.Application) {
     const { resolvers, schema } = this.findResolvers();
     this.apollo = new ApolloServer({
       typeDefs: schema,
@@ -26,7 +26,7 @@ export class ApolloService {
     this.apollo.applyMiddleware({ app });
   }
 
-  public findResolvers() {
+  findResolvers() {
     const metadatas = findDecoratedMethods<{ name: string }, WaspResolver>(WaspResolver.token, "resolver", v => v instanceof GraphQLScalarType);
     if (metadatas.length === 0) {
       this.logger.warn("apollo.noResolvers");
