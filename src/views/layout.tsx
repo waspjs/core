@@ -27,6 +27,13 @@ export const Layout = ({ assets: { styles = [], scripts = [] } = {}, title, req 
       </head>
       <body>
         {children}
+        <script src={assetResolverService.resolve("delivr://systemjs")}></script>
+        <script>
+          SystemJS.config({JSON.stringify({
+            baseURL: "",
+            map: {}
+          })})
+        </script>
         {scripts.concat([req.path + ".js"]).map(url => (
           <script src={assetResolverService.resolve(url) || url}></script>
         ))}

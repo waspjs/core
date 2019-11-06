@@ -15,6 +15,7 @@ export class CdnjsAssetResolver extends AssetResolver {
     switch (packageName) {
       case "bootstrap.js": return "/dist/js/bootstrap.min.js";
       case "bootstrap.css": return "/dist/css/bootstrap.min.css";
+      case "systemjs": return "/dist/system.min.js";
     }
   }
 }

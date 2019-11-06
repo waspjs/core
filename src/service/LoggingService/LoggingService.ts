@@ -1,3 +1,4 @@
+import * as util from "util";
 import * as moment from "moment";
 import { Service } from "typedi";
 import { LogLevel } from "./LogLevel";
@@ -21,7 +22,7 @@ export class LoggingService {
     let extra = data;
     if (typeof(extra) === "object") {
       extra = Object.entries(extra || { }).map(([k, v]) =>
-        v instanceof Error ? `${k}="${v.message}\n${v.stack}"` : `${k}=${JSON.stringify(v)}`
+        v instanceof Error ? `${k}="${v.message}\n${v.stack}"` : `${k}=${util.inspect(v)}`
       ).join(" ");
     }
     console.log(`${now.format(dateFormat)} [${level}] [${name}] ${extra}`);

@@ -1,7 +1,9 @@
+import * as fs from "fs";
 import { resolve as resolvePath } from "path";
 import * as _ from "lodash";
 import * as recursiveReaddir from "recursive-readdir";
 import Container, { Service } from "typedi";
+import * as ts from "typescript";
 import { LoggingService } from "../LoggingService";
 
 /**
@@ -14,7 +16,13 @@ export class BrowserScriptService {
   private logger = Container.get(LoggingService);
 
   // Key: HTTP path
-  private cache: {[key: string]: string} = {};
+  private cache: {
+    [key: string]: {
+      filename: string;
+      compiled: string;
+      tsconfig: any;
+    };
+  } = {};
 
   /**
    * Find and cache everything
@@ -36,9 +44,26 @@ export class BrowserScriptService {
         !f.includes("node_modules")
       );
       for (const filename of filenames) {
-        this.cache[filename.slice(dir.length).replace(/\\/g, "/")] = filename;
+        this.cache[filename.slice(dir.length).replace(/\\/g, "/")] = {
+          filename,
+          tsconfig: {},
+          compiled: await this.compileFile(filename, {})
+        };
       }
     }));
+    console.log(this.cache);
     this.logger.debug("foobar", { directories, cache: this.cache });
+  }
+
+  private async compileFile(filename: string, tsconfig: any): Promise<string> {
+    const { diagnostics, outputText } = ts.transpileModule(await fs.promises.readFile(filename, "utf8"), {
+      fileName: filename
+    });
+    if (diagnostics && diagnostics.length > 0) {
+      console.error(diagnostics);
+      return "";
+    } else {
+      return outputText;
+    }
   }
 }
