@@ -10,7 +10,10 @@
     "noUnusedLocals": true,
     "inlineSourceMap": true,
     "skipLibCheck": true,
-    "declaration": true
+    "declaration": true,
+    "jsx": "react",
+    "jsxFactory": "createElement"
   },
-  "include": ["./src/*.ts", "./src/**/*.ts"]
+  "include": ["./src/*.ts", "./src/**/*.ts", "./src/**/*.tsx"],
+  "exclude": ["src/views/**/*.ts"]
 }

@@ -2,8 +2,8 @@ import { prop } from "@typegoose/typegoose";
 
 export class UserAuthLocal {
   @prop({ required: true })
-  public passwordHash!: string;
+  passwordHash!: string;
 
   @prop()
-  public resetToken?: string;
+  resetToken?: string;
 }

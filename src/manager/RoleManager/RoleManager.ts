@@ -4,11 +4,11 @@ import { MongoService } from "../../service";
 
 @Service()
 export class RoleManager {
-  public constructor(
+  constructor(
     private db: MongoService
   ) { }
 
-  public async create(name: string) {
+  async create(name: string) {
     const count = await this.db.roles.countDocuments({ name }).exec();
     if (count > 0) {
       throw new Error("role with that name already exists");
@@ -19,7 +19,7 @@ export class RoleManager {
     }));
   }
 
-  public async addPermissions(role: Role, permissions: string[]) {
+  async addPermissions(role: Role, permissions: string[]) {
     await this.db.roles.updateOne({
       _id: role._id
     }, {

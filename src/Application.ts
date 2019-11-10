@@ -7,16 +7,16 @@ export class Application {
   private mongo = Container.get(MongoService);
   private webServer = Container.get(WebServer);
 
-  public async init() {
+  async init() {
     await this.mongo.init();
-    this.webServer.init();
+    await this.webServer.init();
   }
 
-  public async start() {
+  async start() {
     await this.webServer.start();
   }
 
-  public async stop() {
+  async stop() {
     await this.webServer.stop();
     await this.mongo.close();
   }

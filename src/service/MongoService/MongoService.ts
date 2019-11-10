@@ -14,16 +14,16 @@ interface CollectionMetadata {
 @Service()
 export class MongoService {
   @MongoService.collection(Role, "roles")
-  public roles!: ReturnModelType<typeof Role>;
+  roles!: ReturnModelType<typeof Role>;
 
   @MongoService.collection(User, "users")
-  public users!: ReturnModelType<typeof User>;
+  users!: ReturnModelType<typeof User>;
 
   protected connection!: mongoose.Connection;
 
   private config = Container.get(ConfigService);
 
-  public async init() {
+  async init() {
     this.connection = await mongoose.createConnection(this.config.mongoUrl, {
       useNewUrlParser: true,
       useUnifiedTopology: true
@@ -37,11 +37,11 @@ export class MongoService {
     }
   }
 
-  public async close() {
+  async close() {
     return this.connection.close();
   }
 
-  public static collection<Model extends new(...args: any[]) => any>(model: Model, name: string) {
+  static collection<Model extends new(...args: any[]) => any>(model: Model, name: string) {
     return (target: MongoService, key: string) => {
       const collections: CollectionMetadata[] = Reflect.getMetadata("collections", target) || [];
       Reflect.defineMetadata("collections", collections.concat([{ key, name, model }]), target);

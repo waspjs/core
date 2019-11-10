@@ -4,6 +4,6 @@ import { UserOpManager } from "./UserOpManager";
 
 @Service()
 export class UserManager {
-  public readonly auth = Container.get(UserAuthManager);
-  public readonly ops = Container.get(UserOpManager);
+  readonly auth = Container.get(UserAuthManager);
+  readonly ops = Container.get(UserOpManager);
 }

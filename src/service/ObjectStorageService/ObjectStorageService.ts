@@ -11,15 +11,15 @@ import { ConfigService } from "../ConfigService";
  */
 @Service()
 export class ObjectStorageService {
-  public constructor(
+  constructor(
     private config: ConfigService
   ) { }
 
-  public async createReadStream(key: string, { start, end }: { start: number; end?: number }): Promise<Readable> {
+  async createReadStream(key: string, { start, end }: { start: number; end?: number }): Promise<Readable> {
     return fs.createReadStream(path.resolve(this.storageDir, key), { start, end });
   }
 
-  public async exists(key: string): Promise<boolean> {
+  async exists(key: string): Promise<boolean> {
     try {
       await fs.promises.access(path.resolve(this.storageDir, key));
       return true;
@@ -28,17 +28,17 @@ export class ObjectStorageService {
     }
   }
 
-  public async getSize(key: string): Promise<number> {
+  async getSize(key: string): Promise<number> {
     const stats = await fs.promises.stat(path.resolve(this.storageDir, key));
     return stats.size;
   }
 
-  public async isFile(key: string): Promise<boolean> {
+  async isFile(key: string): Promise<boolean> {
     const stats = await fs.promises.stat(path.resolve(this.storageDir, key));
     return stats.isFile();
   }
 
-  public async list(dir: string): Promise<string[]> {
+  async list(dir: string): Promise<string[]> {
     if (!await this.exists(dir)) { return []; }
     const fullDir = path.resolve(this.storageDir, dir);
     const files = await fs.promises.readdir(fullDir);

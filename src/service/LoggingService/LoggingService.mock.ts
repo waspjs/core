@@ -7,12 +7,12 @@ export interface MockLog {
 }
 
 export class MockLoggingService {
-  public logs: MockLog[] = [];
+  logs: MockLog[] = [];
 
-  public debug(name: string, data?: any) { return this.log(LogLevel.Debug, name, data); }
-  public info(name: string, data?: any) { return this.log(LogLevel.Info, name, data); }
-  public warn(name: string, data?: any) { return this.log(LogLevel.Warn, name, data); }
-  public error(name: string, err: Error, data?: any) { return this.log(LogLevel.Error, name, { err, ...data }); }
+  debug(name: string, data?: any) { return this.log(LogLevel.Debug, name, data); }
+  info(name: string, data?: any) { return this.log(LogLevel.Info, name, data); }
+  warn(name: string, data?: any) { return this.log(LogLevel.Warn, name, data); }
+  error(name: string, err: Error, data?: any) { return this.log(LogLevel.Error, name, { err, ...data }); }
 
   protected log(level: LogLevel, name: string, data?: any) {
     this.logs.push({ level, name, data });

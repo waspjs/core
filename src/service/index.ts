@@ -1,4 +1,5 @@
 export * from "./ApolloService";
+export * from "./AssetResolverService";
 export * from "./ConfigService";
 export * from "./ContextService";
 export * from "./ControllerService";

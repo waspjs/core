@@ -1,0 +1,12 @@
+overwrite: true
+schema: "http://localhost:8080/graphql"
+generates:
+  src/graphql/types.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+    config:
+      maybeValue: T | undefined
+      scalars:
+        DateTime: Date
+        Upload: File

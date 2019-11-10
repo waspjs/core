@@ -14,7 +14,7 @@ export class ControllerService {
   private config = Container.get(ConfigService);
   private logger = Container.get(LoggingService);
 
-  public init(app: express.Application) {
+  init(app: express.Application) {
     const metadatas = findDecoratedMethods<{ method: HttpMethod; path: string }, any>(WaspController.token, "controller");
     metadatas.forEach(({ method, path, target, key }) => {
       const matcher = (app as any)[method.toLowerCase()].bind(app) as express.IRouterMatcher<express.Application>;
@@ -22,7 +22,7 @@ export class ControllerService {
     });
   }
 
-  public wrapController(controller: (req: express.Request, res: express.Response) => any) {
+  wrapController(controller: (req: express.Request, res: express.Response) => any) {
     return async(req: express.Request, res: express.Response) => {
       try {
         // Controllers can return non-promise values, but awaiting non-promises is harmless

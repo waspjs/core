@@ -1,3 +1,4 @@
+import * as util from "util";
 import * as moment from "moment";
 import { Service } from "typedi";
 import { LogLevel } from "./LogLevel";
@@ -6,10 +7,10 @@ import { LogLevel } from "./LogLevel";
 export class LoggingService {
   private lastLogTime = moment(0);
 
-  public debug(name: string, data?: any) { return this.log(LogLevel.Debug, name, data); }
-  public info(name: string, data?: any) { return this.log(LogLevel.Info, name, data); }
-  public warn(name: string, data?: any) { return this.log(LogLevel.Warn, name, data); }
-  public error(name: string, err: Error, data?: any) { return this.log(LogLevel.Error, name, { err, ...data }); }
+  debug(name: string, data?: any) { return this.log(LogLevel.Debug, name, data); }
+  info(name: string, data?: any) { return this.log(LogLevel.Info, name, data); }
+  warn(name: string, data?: any) { return this.log(LogLevel.Warn, name, data); }
+  error(name: string, err: Error, data?: any) { return this.log(LogLevel.Error, name, { err, ...data }); }
 
   protected log(level: LogLevel, name: string, data?: any) {
     const now = moment();
@@ -20,7 +21,9 @@ export class LoggingService {
     }
     let extra = data;
     if (typeof(extra) === "object") {
-      extra = Object.entries(extra || { }).map(([k, v]) => `${k}="${v}"`).join(" ");
+      extra = Object.entries(extra || { }).map(([k, v]) =>
+        v instanceof Error ? `${k}="${v.message}\n${v.stack}"` : `${k}=${util.inspect(v)}`
+      ).join(" ");
     }
     console.log(`${now.format(dateFormat)} [${level}] [${name}] ${extra}`);
   }

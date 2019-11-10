@@ -15,24 +15,24 @@ interface ConfigMetadata<T = string> {
 @Service()
 export class ConfigService {
   @ConfigService.required("AUTH_JWT_KEY")
-  public authJwtKey!: string;
+  authJwtKey!: string;
 
   @ConfigService.required("HTTP_PORT", Number)
-  public httpPort!: number;
+  httpPort!: number;
 
   @ConfigService.optional("NODE_ENV", e => e === "development")
-  public inDevelopment!: boolean;
+  inDevelopment!: boolean;
 
   @ConfigService.required("MONGO_URL")
-  public mongoUrl!: string;
+  mongoUrl!: string;
 
   @ConfigService.optional("OBJECT_STORAGE_DIR")
-  public objectStorageDir?: string;
+  objectStorageDir?: string;
 
   @ConfigService.required("STATIC_SYSTEM_TOKEN")
-  public staticSystemToken!: string;
+  staticSystemToken!: string;
 
-  public constructor() {
+  constructor() {
     const configs = Reflect.getMetadata("configs", this);
     for (const { fieldName, key, transformer, isRequired } of configs) {
       const value = process.env[key];

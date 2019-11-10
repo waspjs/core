@@ -4,8 +4,8 @@ import { UserAuthType } from "./UserAuthType";
 
 export class UserAuth {
   @prop({ required: true, enum: UserAuthType })
-  public type!: UserAuthType;
+  type!: UserAuthType;
 
   @prop({ _id: false })
-  public local?: UserAuthLocal;
+  local?: UserAuthLocal;
 }
