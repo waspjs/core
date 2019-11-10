@@ -2,8 +2,8 @@ import { UrlWithStringQuery } from "url";
 import { AssetResolver } from "../AssetResolver";
 
 @AssetResolver.Service()
-export class CdnjsAssetResolver extends AssetResolver {
-  protocol = "delivr";
+export class DelivrAssetResolver extends AssetResolver {
+  pattern = /^delivr\:\/\//;
 
   resolve({ hostname: packageName = "", pathname }: UrlWithStringQuery): string | undefined {
     const version = pathname ? pathname.replace(/\//g, "") : undefined;

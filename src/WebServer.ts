@@ -1,7 +1,7 @@
 import * as http from "http";
 import * as express from "express";
 import Container, { Service } from "typedi";
-import { ApolloService, ConfigService, ControllerService, LoggingService, BrowserScriptService } from "./service";
+import { ApolloService, AssetResolverService, ConfigService, ControllerService, LoggingService } from "./service";
 
 @Service()
 export class WebServer {
@@ -9,7 +9,7 @@ export class WebServer {
   private logger = Container.get(LoggingService);
 
   private apolloService = Container.get(ApolloService);
-  private browserScriptService = Container.get(BrowserScriptService);
+  private assetResolverService = Container.get(AssetResolverService);
   private controllerService = Container.get(ControllerService);
 
   httpServer!: http.Server;
@@ -17,8 +17,8 @@ export class WebServer {
 
   async init() {
     this.express = express();
+    await this.assetResolverService.init(this.express);
     this.apolloService.init(this.express);
-    await this.browserScriptService.init();
     this.controllerService.init(this.express);
     this.httpServer = http.createServer(this.express);
   }

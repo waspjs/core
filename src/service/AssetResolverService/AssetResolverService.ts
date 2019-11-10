@@ -1,4 +1,5 @@
 import { parse as parseUrl } from "url";
+import * as express from "express";
 import Container, { Service } from "typedi";
 import { AssetResolver } from "./AssetResolver";
 import "./resolver";
@@ -7,13 +8,12 @@ import "./resolver";
 export class AssetResolverService {
   private resolvers = Container.getMany(AssetResolver.token);
 
+  async init(app: express.Application) {
+    await Promise.all(this.resolvers.map(r => r.init(app)));
+  }
+
   resolve(rawUrl: string): string | undefined {
-    const url = parseUrl(rawUrl);
-    if (!url.protocol) {
-      return undefined;
-    }
-    const resolver = this.resolvers.find(r => (r.protocol + ":") === url.protocol);
-    console.log(url, resolver && resolver.resolve(url));
-    return resolver && resolver.resolve(url);
+    const resolver = this.resolvers.find(r => r.pattern.test(rawUrl));
+    return resolver && resolver.resolve(parseUrl(rawUrl));
   }
 }
