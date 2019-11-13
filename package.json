@@ -15,7 +15,7 @@
     "generate": "graphql-codegen --config codegen.graphql.yml",
     "js": "yarn --cwd ./src/views/js",
     "prepublishOnly": "yarn build",
-    "preinstall": "yarn js install"
+    "postinstall": "yarn js install"
   },
   "engines": {
     "node": ">=10.3.0"
