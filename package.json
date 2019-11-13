@@ -13,7 +13,8 @@
     "test": "mocha dist/**/*.spec.js",
     "test:dev": "tsc-watch --onSuccess \"yarn test\"",
     "generate": "graphql-codegen --config codegen.graphql.yml",
-    "js": "yarn --cwd ./src/views/js"
+    "js": "yarn --cwd ./src/views/js",
+    "prepublishOnly": "yarn build"
   },
   "engines": {
     "node": ">=10.3.0"
