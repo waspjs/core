@@ -10,6 +10,8 @@ export * from "./manager/UserManager";
 export * from "./model/Role";
 export * from "./model/User";
 
+export * from "./views/layout";
+
 export * from "./lib";
 export * from "./service";
 export * from "./util";
