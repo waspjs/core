@@ -7,8 +7,8 @@ export class DelivrAssetResolver extends AssetResolver {
 
   resolve({ hostname: packageName = "", pathname }: UrlWithStringQuery): string | undefined {
     const version = pathname ? pathname.replace(/\//g, "") : undefined;
-    const path = this.resolvePath(packageName, version);
-    return `https://cdn.jsdelivr.net/npm/${packageName.split(".")[0]}@${version || "latest"}${path || ""}`;
+    const path = this.resolvePath(packageName || undefined, version);
+    return `https://cdn.jsdelivr.net/npm/${packageName?.split(".")[0]}@${version || "latest"}${path || ""}`;
   }
 
   private resolvePath(packageName?: string, version?: string): string | undefined {
