@@ -1,6 +1,6 @@
 {
   "name": "@wasp/core",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "Alex Hicks <alex@alexhicks.net> (https://alexhicks.net)",
   "license": "MIT",
   "main": "dist/index.js",
