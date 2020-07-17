@@ -29,7 +29,7 @@
     "graphql": "14.5.8",
     "graphql-type-datetime": "0.2.4",
     "jsonwebtoken": "8.5.1",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "moment": "2.24.0",
     "mongoose": "5.7.11",
     "randomstring": "1.1.5",
