@@ -28,7 +28,7 @@
     "express": "4.17.1",
     "graphql": "14.5.8",
     "graphql-type-datetime": "0.2.4",
-    "jsonwebtoken": "8.5.1",
+    "jsonwebtoken": "9.0.0",
     "lodash": "4.17.15",
     "moment": "2.24.0",
     "mongoose": "5.7.11",
